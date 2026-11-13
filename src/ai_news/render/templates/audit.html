@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Audit {{ edition.id }} · {{ site_title }}{% endblock %}
+{% block nav %}<a href="{{ base }}/">← Retour à l'édition</a>{% endblock %}
+{% block content %}
+<main class="wrap article">
+  <header class="article-head">
+    <span class="mono small">{{ label }}</span>
+    <h1 class="article-title">Audit de l'édition</h1>
+    <p class="body">Chaque source lue, son score de fiabilité et la raison de son tri. Les sujets non publiés restent consultables ici.</p>
+  </header>
+
+  {% if edition.incidents %}
+  <section>
+    <h2 class="section-label">Incidents</h2>
+    <ul class="plain">
+      {% for i in edition.incidents %}<li>{{ i }}</li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <section>
+    <h2 class="section-label">Sujets non publiés</h2>
+    {% if edition.cut %}
+    <div class="table-box">
+      <table>
+        <thead><tr><th scope="col">Rang</th><th scope="col">Événement</th><th scope="col">Score</th><th scope="col">Motif</th></tr></thead>
+        <tbody>
+          {% for c in edition.cut %}
+          <tr>
+            <td class="mono">{{ c.rank if c.rank is not none else "—" }}</td>
+            <td>{{ c.label }}</td>
+            <td class="mono">{{ "%.2f" | format(c.score) if c.score is not none else "—" }}</td>
+            <td>{{ c.reason }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="body">Aucun.</p>
+    {% endif %}
+    <p class="mono small">score = 0,6 × couverture + 0,4 × impact, × pénalité si redite sans fait nouveau</p>
+  </section>
+
+  <section>
+    <h2 class="section-label">Sources lues ({{ edition.audit | length }})</h2>
+    <div class="table-box">
+      <table>
+        <thead><tr><th scope="col">Événement</th><th scope="col">Source</th><th scope="col">Fiabilité</th><th scope="col">Statut</th><th scope="col">Justification</th></tr></thead>
+        <tbody>
+          {% for a in edition.audit %}
+          <tr>
+            <td>{{ a.cluster_label or "—" }}</td>
+            <td><a href="{{ a.url }}" rel="noopener noreferrer">{{ a.outlet }}</a></td>
+            <td class="mono">{{ "%.2f" | format(a.reliability) }}</td>
+            <td><span class="badge badge-{{ a.status.name | lower }}">{{ a.status.value }}</span></td>
+            <td>{{ a.reason }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Coûts du run</h2>
+    <p class="mono small">{{ edition.stats.queries }} requêtes · {{ edition.stats.search_requests }} appels de recherche · {{ edition.stats.llm_calls }} appels LLM</p>
+  </section>
+</main>
+{% endblock %}
+{% block footer_meta %}<span class="mono">Édition {{ edition.id }}</span>{% endblock %}

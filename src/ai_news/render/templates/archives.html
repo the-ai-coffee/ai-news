@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Archives · {{ site_title }}{% endblock %}
+{% block nav %}
+<a href="/">Une</a>
+<a href="/archives/" aria-current="page">Archives</a>
+{% endblock %}
+{% block content %}
+<main class="wrap-narrow article">
+  <h1 class="article-title">Archives</h1>
+  <ul class="source-list">
+    {% for edition, label in archives %}
+    <li>
+      <a href="/e/{{ edition.id }}/">{{ label }}</a>
+      <span class="mono small">{{ edition.stories | length }} sujets</span>
+    </li>
+    {% endfor %}
+  </ul>
+</main>
+{% endblock %}
