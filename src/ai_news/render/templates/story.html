@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ story.title }} · {{ site_title }}{% endblock %}
+{% block nav %}<a href="{{ base }}/">← Retour à l'édition</a>{% endblock %}
+{% block content %}
+<main class="wrap-narrow article">
+  <header class="article-head">
+    <div class="meta-row">
+      <span class="kicker">{{ story.theme }} · {{ story.region }}</span>
+      <span>Sujet n°{{ story.rank }} · {{ label }}</span>
+      <span>{{ story.read_minutes }} min de lecture</span>
+    </div>
+    <h1 class="article-title">{{ story.title }}</h1>
+  </header>
+
+  <section>
+    <h2 class="section-label">L'essentiel</h2>
+    <p class="body-lg">{{ story.essentiel }}</p>
+  </section>
+
+  <section>
+    <h2 class="section-label">Les faits</h2>
+    <p class="body-lg">{{ story.faits }}</p>
+  </section>
+
+  {% if story.contexte %}
+  <section>
+    <h2 class="section-label">Contexte</h2>
+    <p class="body-lg">{{ story.contexte }}</p>
+  </section>
+  {% endif %}
+
+  {% if story.divergences %}
+  <section class="divergences">
+    <h2 class="section-label">Points divergents</h2>
+    {% for d in story.divergences %}
+    <div class="divergence">
+      <h3>{{ d.topic }}</h3>
+      <div class="positions">
+        {% for p in d.positions %}
+        <div class="position">
+          <span class="mono small">{{ p.sources | join(", ") }}</span>
+          <span>{{ p.position }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    <p class="small">Les écarts ne sont pas tranchés : chaque version est rapportée telle que publiée.</p>
+  </section>
+  {% endif %}
+
+  <section>
+    <h2 class="section-label">Sources · {{ story.independent_sources }} indépendantes</h2>
+    <ul class="source-list">
+      {% for s in story.sources %}
+      <li>
+        <a href="{{ s.url }}" rel="noopener noreferrer">{{ s.outlet }}</a>
+        <span class="mono small">{{ [s.language | upper, s.country] | select | join(" · ") }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="small">
+      {% if story.merged_wire_copies %}{{ story.merged_wire_copies }} reprise(s) de dépêche fusionnée(s). {% endif %}
+      <a href="{{ base }}/audit.html">Voir pourquoi chaque source a été retenue ou écartée →</a>
+    </p>
+  </section>
+</main>
+{% endblock %}
+{% block footer_meta %}<span class="mono">Édition {{ edition.id }}</span>{% endblock %}

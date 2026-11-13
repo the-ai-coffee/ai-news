@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block subtitle %}<span class="meta">{{ label }}</span>{% endblock %}
+{% block nav %}
+<a href="/" {% if is_latest %}aria-current="page"{% endif %}>Une</a>
+<a href="/archives/">Archives</a>
+<a href="{{ base }}/audit.html">Audit de l'édition</a>
+{% endblock %}
+{% block content %}
+<main class="wrap layout">
+  <div class="main-col">
+    {% if not is_latest %}
+    <p class="notice">Édition archivée. <a href="/">Voir la dernière édition →</a></p>
+    {% endif %}
+    <h1 class="section-head">Les {{ edition.stories | length }} sujets de l'édition</h1>
+    {% for story in edition.stories %}
+    <article class="card">
+      <span class="rank">{{ "%02d" | format(story.rank) }}</span>
+      <div class="card-body">
+        <span class="kicker">{{ story.theme }} · {{ story.region }}</span>
+        <h2 class="card-title"><a href="{{ base }}/{{ story.id }}.html">{{ story.title }}</a></h2>
+        <p class="lede">{{ story.essentiel }}</p>
+        {% if story.divergences %}
+        <p class="divergence-flag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+          <span><strong>Divergence :</strong> {{ story.divergences[0].topic }}{% if story.divergences | length > 1 %} (+{{ story.divergences | length - 1 }}){% endif %}</span>
+        </p>
+        {% endif %}
+        <div class="card-foot">
+          <span>{{ story.independent_sources }} sources indépendantes : {{ story.sources | map(attribute="outlet") | join(", ") }}</span>
+          <a class="more" href="{{ base }}/{{ story.id }}.html">Lire en {{ story.read_minutes }} min →</a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  <aside class="side">
+    <section>
+      <h2 class="side-head">Cette édition</h2>
+      <dl class="stats">
+        <dt>Articles lus</dt><dd>{{ edition.stats.articles_read }}</dd>
+        <dt>Sources retenues</dt><dd>{{ edition.stats.sources_retained }}</dd>
+        <dt>Événements détectés</dt><dd>{{ edition.stats.events_detected }}</dd>
+        <dt>Sujets publiés</dt><dd>{{ edition.stats.stories_published }}</dd>
+      </dl>
+      <a class="more" href="{{ base }}/audit.html">Voir l'audit complet →</a>
+    </section>
+    <section>
+      <h2 class="side-head">Périmètre</h2>
+      <p>Thèmes : {{ edition.themes | join(", ") }}.</p>
+      <p>Régions : {{ edition.regions | join(", ") }}.</p>
+    </section>
+    <section>
+      <h2 class="side-head">Méthode</h2>
+      <p>Un sujet n'est publié que s'il est couvert par au moins deux sources indépendantes. Les points où elles divergent sont signalés, jamais tranchés.</p>
+    </section>
+  </aside>
+</main>
+{% endblock %}
+{% block footer_meta %}<span class="mono">Édition {{ edition.id }}</span>{% endblock %}

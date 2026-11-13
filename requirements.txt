@@ -1,6 +1,0 @@
-crewai==0.28.2
-crewai_tools==0.1.5
-langchain_community==0.0.31
-langchain_core==0.1.40
-boto3
-python-dotenv

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>{% block title %}{{ site_title }}{% endblock %}</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap masthead-inner">
+    <div class="brand">
+      <a class="logo" href="/">{{ site_title }}</a>
+      {% block subtitle %}{% endblock %}
+    </div>
+    <nav aria-label="Navigation principale" class="nav">
+      {% block nav %}
+      <a href="/">Une</a>
+      <a href="/archives/">Archives</a>
+      {% endblock %}
+    </nav>
+  </div>
+</header>
+{% block content %}{% endblock %}
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>Résumés générés automatiquement à partir des sources citées. Sans publicité, sans traceur.</span>
+    {% block footer_meta %}{% endblock %}
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,65 @@
+# Configuration éditoriale. Validée au démarrage : le run échoue immédiatement si elle est invalide.
+# Chaque requête de recherche = (requête du thème) + (termes de la région).
+
+[site]
+title = "Le Relevé"
+timezone = "Europe/Paris"
+
+[edition]
+max_stories = 10         # sujets publiés au maximum, tous thèmes confondus
+min_stories = 3          # en dessous : pas de publication, le run échoue (alerte GitHub)
+min_sources = 2          # sources indépendantes minimum pour publier un sujet
+max_read_minutes = 3     # longueur maximale de la page détaillée
+words_per_minute = 230
+
+[search]
+results_per_query = 8
+tbs = "qdr:d"            # fenêtre de fraîcheur Firecrawl (qdr:d = 24 h)
+max_chars_per_article = 6000
+
+[assess]
+min_reliability = 0.5    # sources sous ce score : écartées
+batch_size = 10
+
+[ranking]
+coverage_weight = 0.6
+impact_weight = 0.4
+repeat_penalty = 0.5     # multiplicateur appliqué à un sujet déjà publié sans fait nouveau
+
+[budget]
+max_llm_calls = 80
+max_search_requests = 40
+
+[llm]
+model = "deepseek-chat"
+base_url = "https://api.deepseek.com"
+temperature = 0.2
+timeout_seconds = 120
+
+[[themes]]
+name = "Monde"
+queries = ["actualité internationale", "world news"]
+
+[[themes]]
+name = "Économie"
+queries = ["économie actualité"]
+
+[[themes]]
+name = "Tech"
+queries = ["technologie actualité"]
+
+[[themes]]
+name = "Science"
+queries = ["science découverte"]
+
+[[regions]]
+name = "International"
+terms = ""
+
+[[regions]]
+name = "Europe"
+terms = "Europe"
+
+[[regions]]
+name = "Afrique centrale"
+terms = "Afrique centrale"
